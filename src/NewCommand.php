@@ -26,9 +26,9 @@ class NewCommand extends Command
     {
         $this
             ->setName('new')
-            ->setDescription('Create a new Simpleweb application.')
+            ->setDescription('Create a new SimpleWEB application.')
             ->addArgument('name', InputArgument::OPTIONAL)
-            ->addOption('beta', null, InputOption::VALUE_NONE, 'Installs the latest "beta" release')
+            ->addOption('beta', null, InputOption::VALUE_NONE, 'Installs the latest BETA release')
             ;
     }
 
@@ -51,11 +51,9 @@ class NewCommand extends Command
         $greetInput = new ArrayInput($arguments);
         $returnCode = $command->run($greetInput, $output);
 
+        // TODO check $returnCode and continue only if no error has occured
+
         $directory = ($input->getArgument('name'));
-//
-//        if (! $input->getOption('force')) {
-//            $this->verifyApplicationDoesntExist($directory);
-//        }
 
         $output->writeln('<info>Crafting SimpleWEB...</info>');
 
@@ -70,12 +68,6 @@ class NewCommand extends Command
 
         array_push($commands,$composer.' require "brackets/simpleweb"');
         array_push($commands,$composer.' require --dev "brackets/admin-generator"');
-//
-//        if ($input->getOption('no-ansi')) {
-//            $commands = array_map(function ($value) {
-//                return $value.' --no-ansi';
-//            }, $commands);
-//        }
 
         $process = new Process(implode(' && ', $commands), $directory, null, null, null);
 
@@ -88,125 +80,6 @@ class NewCommand extends Command
         });
 
         $output->writeln('<comment>SimpleWEB ready! Build something amazing.</comment>');
-    }
-
-    /**
-     * Verify that the application does not already exist.
-     *
-     * @param  string  $directory
-     * @return void
-     */
-    protected function verifyApplicationDoesntExist($directory)
-    {
-        if ((is_dir($directory) || is_file($directory)) && $directory != getcwd()) {
-            throw new RuntimeException('Application already exists!');
-        }
-    }
-
-    /**
-     * Generate a random temporary filename.
-     *
-     * @return string
-     */
-    protected function makeFilename()
-    {
-        return getcwd().'/simpleweb_'.md5(time().uniqid()).'.zip';
-    }
-
-    /**
-     * Download the temporary Zip to the given file.
-     *
-     * @param  string  $zipFile
-     * @param  string  $version
-     * @return $this
-     */
-    protected function download($zipFile, $version = 'master')
-    {
-        switch ($version) {
-            case 'develop':
-                $filename = 'latest-develop.zip';
-                break;
-            case 'master':
-                $filename = 'latest.zip';
-                break;
-        }
-
-        $response = (new Client)->get('http://cabinet.laravel.com/'.$filename);
-
-        file_put_contents($zipFile, $response->getBody());
-
-        return $this;
-    }
-
-    /**
-     * Extract the Zip file into the given directory.
-     *
-     * @param  string  $zipFile
-     * @param  string  $directory
-     * @return $this
-     */
-    protected function extract($zipFile, $directory)
-    {
-        $archive = new ZipArchive;
-
-        $archive->open($zipFile);
-
-        $archive->extractTo($directory);
-
-        $archive->close();
-
-        return $this;
-    }
-
-    /**
-     * Clean-up the Zip file.
-     *
-     * @param  string  $zipFile
-     * @return $this
-     */
-    protected function cleanUp($zipFile)
-    {
-        @chmod($zipFile, 0777);
-
-        @unlink($zipFile);
-
-        return $this;
-    }
-
-    /**
-     * Make sure the storage and bootstrap cache directories are writable.
-     *
-     * @param  string  $appDirectory
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-     * @return $this
-     */
-    protected function prepareWritableDirectories($appDirectory, OutputInterface $output)
-    {
-        $filesystem = new Filesystem;
-
-        try {
-            $filesystem->chmod($appDirectory.DIRECTORY_SEPARATOR."bootstrap/cache", 0755, 0000, true);
-            $filesystem->chmod($appDirectory.DIRECTORY_SEPARATOR."storage", 0755, 0000, true);
-        } catch (IOExceptionInterface $e) {
-            $output->writeln('<comment>You should verify that the "storage" and "bootstrap/cache" directories are writable.</comment>');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get the version that should be downloaded.
-     *
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @return string
-     */
-    protected function getVersion(InputInterface $input)
-    {
-        if ($input->getOption('dev')) {
-            return 'develop';
-        }
-
-        return 'master';
     }
 
     /**
