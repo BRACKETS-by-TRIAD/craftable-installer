@@ -29,7 +29,7 @@ class NewCommand extends Command
             ->setDescription('Create a new Simpleweb application.')
             ->addArgument('name', InputArgument::OPTIONAL)
             ->addOption('beta', null, InputOption::VALUE_NONE, 'Installs the latest "beta" release')
-            ->addOption('force', null, InputOption::VALUE_NONE, 'Forces install even if the directory already exists');
+            ;
     }
 
     /**
@@ -51,44 +51,31 @@ class NewCommand extends Command
         $greetInput = new ArrayInput($arguments);
         $returnCode = $command->run($greetInput, $output);
 
-        print_r($returnCode);die();
+        $directory = ($input->getArgument('name'));
+//
+//        if (! $input->getOption('force')) {
+//            $this->verifyApplicationDoesntExist($directory);
+//        }
 
-        if (! class_exists('ZipArchive')) {
-            throw new RuntimeException('The Zip PHP extension is not installed. Please install it and try again.');
-        }
-
-        $directory = ($input->getArgument('name')) ? getcwd().'/'.$input->getArgument('name') : getcwd();
-
-        if (! $input->getOption('force')) {
-            $this->verifyApplicationDoesntExist($directory);
-        }
-
-        $output->writeln('<info>Crafting simplew...</info>');
-
-        $version = $this->getVersion($input);
-
-        
+        $output->writeln('<info>Crafting SimpleWEB...</info>');
 
         $composer = $this->findComposer();
 
-        $commands = [
-            $composer.' install --no-scripts',
-            $composer.' run-script post-root-package-install',
-            $composer.' run-script post-create-project-cmd',
-            $composer.' run-script post-autoload-dump',
-        ];
+        $commands = [];
 
-        if ($input->getOption('dev')) {
-            unset($commands[2]);
-
-            $commands[] = $composer.' run-script post-autoload-dump';
+        if ($input->getOption('beta')) {
+            array_push($commands,$composer.' config "minimum-stability" "beta"');
+            array_push($commands,$composer.' config "prefer-stable" "true"');
         }
 
-        if ($input->getOption('no-ansi')) {
-            $commands = array_map(function ($value) {
-                return $value.' --no-ansi';
-            }, $commands);
-        }
+        array_push($commands,$composer.' require "brackets/simpleweb"');
+        array_push($commands,$composer.' require --dev "brackets/admin-generator"');
+//
+//        if ($input->getOption('no-ansi')) {
+//            $commands = array_map(function ($value) {
+//                return $value.' --no-ansi';
+//            }, $commands);
+//        }
 
         $process = new Process(implode(' && ', $commands), $directory, null, null, null);
 
@@ -100,7 +87,7 @@ class NewCommand extends Command
             $output->write($line);
         });
 
-        $output->writeln('<comment>Application ready! Build something amazing.</comment>');
+        $output->writeln('<comment>SimpleWEB ready! Build something amazing.</comment>');
     }
 
     /**
