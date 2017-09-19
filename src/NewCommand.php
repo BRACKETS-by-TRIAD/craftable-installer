@@ -28,8 +28,6 @@ class NewCommand extends Command
             ->setName('new')
             ->setDescription('Create a new SimpleWEB application.')
             ->addArgument('name', InputArgument::OPTIONAL)
-            ->addOption('beta', null, InputOption::VALUE_NONE, 'Installs the latest BETA release')
-            ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest DEV release')
             ;
     }
 
@@ -62,21 +60,8 @@ class NewCommand extends Command
 
         $commands = [];
 
-        $version = "";
-        if ($input->getOption('beta')) {
-            $version = "@beta";
-            array_push($commands,$composer.' config "minimum-stability" "beta"');
-            array_push($commands,$composer.' config "prefer-stable" "true"');
-        }
-
-        if ($input->getOption('dev')) {
-            $version = "@dev";
-            array_push($commands,$composer.' config "minimum-stability" "dev"');
-            array_push($commands,$composer.' config "prefer-stable" "true"');
-        }
-
-        array_push($commands,$composer.' require "brackets/simpleweb'.$version.'"');
-        array_push($commands,$composer.' require --dev "brackets/admin-generator'.$version.'"');
+        array_push($commands,$composer.' require "brackets/simpleweb"');
+        array_push($commands,$composer.' require --dev "brackets/admin-generator"');
 
         $process = new Process(implode(' && ', $commands), $directory, null, null, null);
 
