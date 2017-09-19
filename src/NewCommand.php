@@ -28,6 +28,8 @@ class NewCommand extends Command
             ->setName('new')
             ->setDescription('Create a new SimpleWEB application.')
             ->addArgument('name', InputArgument::OPTIONAL)
+            ->addOption('beta', null, InputOption::VALUE_NONE, 'Installs the latest BETA release')
+            ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest DEV release')
             ;
     }
 
@@ -60,8 +62,27 @@ class NewCommand extends Command
 
         $commands = [];
 
-        array_push($commands,$composer.' require "brackets/simpleweb"');
-        array_push($commands,$composer.' require --dev "brackets/admin-generator"');
+        $packages = [
+            "brackets/admin-ui",
+            "brackets/admin-listing",
+            "brackets/admin-auth",
+            "brackets/admin-translations",
+            "brackets/media",
+            "brackets/translatable",
+            "brackets/simpleweb",
+        ];
+
+        if ($input->getOption('beta') || $input->getOption('dev')) {
+            $flag = $input->getOption('dev') ? "dev" : "beta";
+            $packages = array_map(function($package) use ($flag){
+                return '"'.$package.':@'.$flag.'"';
+            }, $packages);
+            array_push($commands, $composer.' require '.implode(' ', $packages));
+            array_push($commands, $composer.' require --dev "brackets/admin-generator:@'.$flag.'"');
+        } else {
+            array_push($commands, $composer.' require "brackets/simpleweb"');
+            array_push($commands, $composer.' require --dev "brackets/admin-generator"');
+        }
 
         $process = new Process(implode(' && ', $commands), $directory, null, null, null);
 
