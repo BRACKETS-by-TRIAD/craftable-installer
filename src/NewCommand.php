@@ -65,10 +65,14 @@ class NewCommand extends Command
         $version = "";
         if ($input->getOption('beta')) {
             $version = "@beta";
+            array_push($commands,$composer.' config "minimum-stability" "beta"');
+            array_push($commands,$composer.' config "prefer-stable" "true"');
         }
 
         if ($input->getOption('dev')) {
             $version = "@dev";
+            array_push($commands,$composer.' config "minimum-stability" "dev"');
+            array_push($commands,$composer.' config "prefer-stable" "true"');
         }
 
         array_push($commands,$composer.' require "brackets/simpleweb'.$version.'"');
