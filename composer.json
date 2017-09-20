@@ -1,7 +1,7 @@
 {
-    "name": "brackets/simpleweb-installer",
-    "description": "Simpleweb application installer.",
-    "keywords": ["simpleweb", "admin", "crud"],
+    "name": "brackets/craftable-installer",
+    "description": "Craftable application installer.",
+    "keywords": ["craftable", "admin", "crud"],
     "license": "MIT",
     "authors": [
         {
@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Brackets\\SimplewebInstaller\\Console\\": "src/"
+            "Brackets\\CraftableInstaller\\Console\\": "src/"
         }
     },
     "require": {
@@ -23,6 +23,6 @@
         "laravel/installer": "~1.4"
     },
     "bin": [
-        "simpleweb"
+        "craftable"
     ]
 }

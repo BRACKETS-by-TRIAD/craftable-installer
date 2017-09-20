@@ -1,6 +1,6 @@
 <?php
 
-namespace Brackets\SimplewebInstaller\Console;
+namespace Brackets\CraftablebInstaller\Console;
 
 use ZipArchive;
 use RuntimeException;
@@ -26,7 +26,7 @@ class NewCommand extends Command
     {
         $this
             ->setName('new')
-            ->setDescription('Create a new SimpleWEB application.')
+            ->setDescription('Create a new Craftable application.')
             ->addArgument('name', InputArgument::OPTIONAL)
             ->addOption('beta', null, InputOption::VALUE_NONE, 'Installs the latest BETA release')
             ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest DEV release')
@@ -56,7 +56,7 @@ class NewCommand extends Command
 
         $directory = ($input->getArgument('name'));
 
-        $output->writeln('<info>Crafting SimpleWEB...</info>');
+        $output->writeln('<info>Crafting Craftable :) ...</info>');
 
         $composer = $this->findComposer();
 
@@ -69,7 +69,7 @@ class NewCommand extends Command
             "brackets/admin-translations",
             "brackets/media",
             "brackets/translatable",
-            "brackets/simpleweb",
+            "brackets/craftable",
         ];
 
         if ($input->getOption('beta') || $input->getOption('dev')) {
@@ -80,7 +80,7 @@ class NewCommand extends Command
             array_push($commands, $composer.' require '.implode(' ', $packages));
             array_push($commands, $composer.' require --dev "brackets/admin-generator:@'.$flag.'"');
         } else {
-            array_push($commands, $composer.' require "brackets/simpleweb"');
+            array_push($commands, $composer.' require "brackets/craftable"');
             array_push($commands, $composer.' require --dev "brackets/admin-generator"');
         }
 
@@ -94,7 +94,7 @@ class NewCommand extends Command
             $output->write($line);
         });
 
-        $output->writeln('<comment>SimpleWEB ready! Build something amazing.</comment>');
+        $output->writeln('<comment>Craftable crafted! Craft something crafty ;)</comment>');
     }
 
     /**
