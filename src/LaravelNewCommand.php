@@ -1,6 +1,6 @@
 <?php
 
-namespace Brackets\SimplewebInstaller\Console;
+namespace Brackets\CraftableInstaller\Console;
 
 use Laravel\Installer\Console\NewCommand as LaravelNew;
 use Symfony\Component\Console\Input\ArrayInput;

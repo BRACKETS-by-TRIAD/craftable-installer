@@ -1,6 +1,6 @@
 <?php
 
-namespace Brackets\CraftablebInstaller\Console;
+namespace Brackets\CraftableInstaller\Console;
 
 use ZipArchive;
 use RuntimeException;
