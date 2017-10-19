@@ -28,7 +28,6 @@ class NewCommand extends Command
             ->setName('new')
             ->setDescription('Create a new Craftable application.')
             ->addArgument('name', InputArgument::OPTIONAL)
-            ->addOption('beta', null, InputOption::VALUE_NONE, 'Installs the latest BETA release')
             ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest DEV release')
             ;
     }
@@ -72,13 +71,14 @@ class NewCommand extends Command
             "brackets/craftable",
         ];
 
-        if ($input->getOption('beta') || $input->getOption('dev')) {
-            $flag = $input->getOption('dev') ? "dev" : "beta";
-            $packages = array_map(function($package) use ($flag){
-                return '"'.$package.':@'.$flag.'"';
+        if ($input->getOption('dev')) {
+            $packages = array_map(function($package) {
+                return '"'.$package.':dev-master"';
             }, $packages);
             array_push($commands, $composer.' require '.implode(' ', $packages));
-            array_push($commands, $composer.' require --dev "brackets/admin-generator:@'.$flag.'"');
+            array_push($commands, $composer.' require --dev "brackets/admin-generator:dev-master"');
+            array_push($commands, 'rm -rf vendor/brackets');
+            array_push($commands, $composer.' update --prefer-source');
         } else {
             array_push($commands, $composer.' require "brackets/craftable"');
             array_push($commands, $composer.' require --dev "brackets/admin-generator"');
