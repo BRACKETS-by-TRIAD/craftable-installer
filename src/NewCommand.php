@@ -83,7 +83,7 @@ class NewCommand extends Command
             array_push($commands, $composer.' require "brackets/craftable"');
             array_push($commands, $composer.' require --dev "brackets/admin-generator"');
         }
-        array_push($commands, 'php artisan craftable:install');
+        array_push($commands, 'cd '.$directory.' && php artisan craftable:install');
 
         $process = new Process(implode(' && ', $commands), $directory, null, null, null);
 
