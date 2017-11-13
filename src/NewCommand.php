@@ -85,7 +85,11 @@ class NewCommand extends Command
             array_push($commands, $composer.' require --dev "brackets/admin-generator"');
         }
         if (!$input->getOption('no-install')) {
+            array_push($commands, '"'.PHP_BINARY.'" artisan craftable:init-env');
             array_push($commands, '"'.PHP_BINARY.'" artisan craftable:install');
+            array_push($commands, 'npm install');
+            array_push($commands, 'npm run dev');
+
         }
 
 
