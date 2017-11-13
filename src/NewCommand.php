@@ -29,6 +29,7 @@ class NewCommand extends Command
             ->setDescription('Create a new Craftable application.')
             ->addArgument('name', InputArgument::OPTIONAL)
             ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest DEV release')
+            ->addOption('no-install', null, InputOption::VALUE_NONE, 'Do not run craftable:install')
             ;
     }
 
@@ -83,7 +84,10 @@ class NewCommand extends Command
             array_push($commands, $composer.' require "brackets/craftable"');
             array_push($commands, $composer.' require --dev "brackets/admin-generator"');
         }
-        array_push($commands, '"'.PHP_BINARY.'" artisan craftable:install');
+        if (!$input->getOption('no-install')) {
+            array_push($commands, '"'.PHP_BINARY.'" artisan craftable:install');
+        }
+
 
         $process = new Process(implode(' && ', $commands), $directory, null, null, null);
 
