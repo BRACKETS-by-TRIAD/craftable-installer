@@ -42,25 +42,19 @@ class NewCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
-        $command = $this->getApplication()->find('laravel');
-
-        $arguments = array(
-            'name'    => $input->getArgument('name'),
-        );
-
-        $greetInput = new ArrayInput($arguments);
-        $returnCode = $command->run($greetInput, $output);
-
-        // TODO check $returnCode and continue only if no error has occured
-
-        $directory = ($input->getArgument('name'));
-
-        $output->writeln('<info>Crafting Craftable :) ...</info>');
-
         $composer = $this->findComposer();
 
         $commands = [];
+
+        $directory = "\"".$input->getArgument('name')."\"";
+
+        array_push($commands, $composer.' create-project --prefer-dist laravel/laravel '.$directory.' "5.5.*" ');
+
+        array_push($commands, 'cd '.$directory);
+
+        // TODO check $returnCode and continue only if no error has occured
+
+        $output->writeln('<info>Crafting Craftable :) ...</info>');
 
         $packages = [
             "brackets/admin-ui",
@@ -93,7 +87,7 @@ class NewCommand extends Command
         }
 
 
-        $process = new Process(implode(' && ', $commands), $directory, null, null, null);
+        $process = new Process(implode(' && ', $commands), null, null, null, null);
 
         if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
             $process->setTty(true);

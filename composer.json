@@ -16,7 +16,10 @@
     },
     "require": {
         "ext-zip": "*",
-        "laravel/installer": "~1.4"
+        "guzzlehttp/guzzle": "~6.0",
+        "symfony/console": "~3.0|~4.0",
+        "symfony/filesystem": "~3.0|~4.0",
+        "symfony/process": "~3.0|~4.0"
     },
     "bin": [
         "craftable"
