@@ -2,18 +2,12 @@
 
 namespace Brackets\CraftableInstaller\Console;
 
-use ZipArchive;
-use RuntimeException;
-use GuzzleHttp\Client;
 use Symfony\Component\Process\Process;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-use Symfony\Component\Console\Input\ArrayInput;
 
 class NewCommand extends Command
 {
@@ -28,7 +22,7 @@ class NewCommand extends Command
             ->setName('new')
             ->setDescription('Create a new Craftable application.')
             ->addArgument('name', InputArgument::OPTIONAL)
-            ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest DEV release')
+            ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest DEV release ready for Craftable development')
             ->addOption('no-install', null, InputOption::VALUE_NONE, 'Do not run craftable:install')
             ;
     }
@@ -51,8 +45,6 @@ class NewCommand extends Command
         array_push($commands, $composer.' create-project --prefer-dist laravel/laravel '.$directory.' "5.5.*" ');
 
         array_push($commands, 'cd '.$directory);
-
-        // TODO check $returnCode and continue only if no error has occured
 
         $output->writeln('<info>Crafting Craftable :) ...</info>');
 
@@ -78,7 +70,9 @@ class NewCommand extends Command
             array_push($commands, $composer.' require "brackets/craftable"');
             array_push($commands, $composer.' require --dev "brackets/admin-generator"');
         }
+
         if (!$input->getOption('no-install')) {
+            // FIXME these commands seem to not work on some environments (probably on some Windows platforms) when run this way (but they work when run manually) - this needs further investigation
             array_push($commands, '"'.PHP_BINARY.'" artisan craftable:init-env');
             array_push($commands, '"'.PHP_BINARY.'" artisan craftable:install');
             array_push($commands, 'npm install');
@@ -86,7 +80,7 @@ class NewCommand extends Command
 
         }
 
-
+        // TODO it would be better to run not all commands in once, because some of them may fail
         $process = new Process(implode(' && ', $commands), null, null, null, null);
 
         if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
