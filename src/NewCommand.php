@@ -23,6 +23,7 @@ class NewCommand extends Command
             ->setDescription('Create a new Craftable application.')
             ->addArgument('name', InputArgument::OPTIONAL)
             ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest DEV release ready for Craftable development')
+            ->addOption('lts', null, InputOption::VALUE_NONE, 'Installs Craftable using LTS release of Laravel (currently v5.5)')
             ->addOption('no-install', null, InputOption::VALUE_NONE, 'Do not run craftable:install')
             ;
     }
@@ -42,28 +43,28 @@ class NewCommand extends Command
 
         $directory = "\"".$input->getArgument('name')."\"";
 
-        array_push($commands, $composer.' create-project --prefer-dist laravel/laravel '.$directory.' "5.5.*" ');
+        array_push($commands, $composer.' create-project --prefer-dist laravel/laravel '.$directory.($input->getOption('lts') ? ' "5.5.*" ' : ' "5.6.*" '));
 
         array_push($commands, 'cd '.$directory);
 
         $output->writeln('<info>Crafting Craftable :) ...</info>');
 
         $packages = [
-            "brackets/admin-ui",
-            "brackets/admin-listing",
-            "brackets/admin-auth",
-            "brackets/admin-translations",
-            "brackets/media",
-            "brackets/translatable",
+            "brackets/admin-ui:dev-laravel-56 as 2.0.x-dev",
+            "brackets/admin-listing:dev-laravel-56 as 2.0.x-dev",
+            "brackets/admin-auth:dev-laravel-56 as 2.0.x-dev",
+            "brackets/admin-translations:dev-laravel-56 as 2.0.x-dev",
+            "brackets/media:dev-laravel-56 as 1.0.x-dev",
+            "brackets/translatable:dev-laravel-56 as 1.0.x-dev",
             "brackets/craftable",
         ];
 
         if ($input->getOption('dev')) {
             $packages = array_map(function($package) {
-                return '"'.$package.':dev-master"';
+                return '"'.$package.'"';
             }, $packages);
             array_push($commands, $composer.' require '.implode(' ', $packages));
-            array_push($commands, $composer.' require --dev "brackets/admin-generator:dev-master"');
+            array_push($commands, $composer.' require --dev "brackets/admin-generator:dev-laravel-56 as 2.0.x-dev"');
             array_push($commands, 'rm -rf vendor/brackets');
             array_push($commands, $composer.' update --prefer-source');
         } else {
