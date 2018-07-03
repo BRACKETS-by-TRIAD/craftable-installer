@@ -23,6 +23,7 @@ class NewCommand extends Command
             ->setDescription('Create a new Craftable application.')
             ->addArgument('name', InputArgument::OPTIONAL)
             ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest DEV release ready for Craftable development')
+            ->addOption('lts', null, InputOption::VALUE_NONE, 'Installs Craftable using LTS release of Laravel (currently v5.5)')
             ->addOption('no-install', null, InputOption::VALUE_NONE, 'Do not run craftable:install')
             ;
     }
@@ -42,7 +43,7 @@ class NewCommand extends Command
 
         $directory = "\"".$input->getArgument('name')."\"";
 
-        array_push($commands, $composer.' create-project --prefer-dist laravel/laravel '.$directory.' "5.5.*" ');
+        array_push($commands, $composer.' create-project --prefer-dist laravel/laravel '.$directory.($input->getOption('lts') ? ' "5.5.*" ' : ' "5.6.*" '));
 
         array_push($commands, 'cd '.$directory);
 
