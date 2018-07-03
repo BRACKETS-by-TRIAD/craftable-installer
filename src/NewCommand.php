@@ -50,21 +50,21 @@ class NewCommand extends Command
         $output->writeln('<info>Crafting Craftable :) ...</info>');
 
         $packages = [
-            "brackets/admin-ui:dev-laravel-56 as 2.0.x-dev",
-            "brackets/admin-listing:dev-laravel-56 as 2.0.x-dev",
-            "brackets/admin-auth:dev-laravel-56 as 2.0.x-dev",
-            "brackets/admin-translations:dev-laravel-56 as 2.0.x-dev",
-            "brackets/media:dev-laravel-56 as 1.0.x-dev",
-            "brackets/translatable:dev-laravel-56 as 1.0.x-dev",
+            "brackets/admin-ui",
+            "brackets/admin-listing",
+            "brackets/admin-auth",
+            "brackets/admin-translations",
+            "brackets/media",
+            "brackets/translatable",
             "brackets/craftable",
         ];
 
         if ($input->getOption('dev')) {
             $packages = array_map(function($package) {
-                return '"'.$package.'"';
+                return '"'.$package.':dev-master"';
             }, $packages);
             array_push($commands, $composer.' require '.implode(' ', $packages));
-            array_push($commands, $composer.' require --dev "brackets/admin-generator:dev-laravel-56 as 2.0.x-dev"');
+            array_push($commands, $composer.' require --dev "brackets/admin-generator:dev-master"');
             array_push($commands, 'rm -rf vendor/brackets');
             array_push($commands, $composer.' update --prefer-source');
         } else {
