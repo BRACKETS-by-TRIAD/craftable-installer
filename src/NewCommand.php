@@ -20,7 +20,7 @@ class NewCommand extends Command
     {
         $this
             ->setName('new')
-            ->setDescription('Create a new Craftable application using latest Laravel (currently 5.7).')
+            ->setDescription('Create a new Craftable application using latest Laravel (currently 5.8).')
             ->addArgument('name', InputArgument::OPTIONAL)
             ->addOption('dev', null, InputOption::VALUE_NONE, 'Installs the latest DEV release ready for Craftable development')
             ->addOption('lts', null, InputOption::VALUE_NONE, 'Installs Craftable using LTS release of Laravel (currently 5.5)')
@@ -43,7 +43,7 @@ class NewCommand extends Command
 
         $directory = "\"".$input->getArgument('name')."\"";
 
-        array_push($commands, $composer.' create-project --prefer-dist laravel/laravel '.$directory.($input->getOption('lts') ? ' "5.5.*" ' : ' "5.7.*" '));
+        array_push($commands, $composer.' create-project --prefer-dist laravel/laravel '.$directory.($input->getOption('lts') ? ' "5.5.*" ' : ' "5.8.*" '));
 
         array_push($commands, 'cd '.$directory);
 
@@ -56,6 +56,7 @@ class NewCommand extends Command
             "brackets/admin-translations",
             "brackets/media",
             "brackets/translatable",
+            "brackets/advanced-logger",
             "brackets/craftable",
         ];
 
