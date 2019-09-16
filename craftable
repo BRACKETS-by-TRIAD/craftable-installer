@@ -10,7 +10,7 @@ if (file_exists(__DIR__.'/../../autoload.php')) {
 use Symfony\Component\Console\Application;
 use Brackets\CraftableInstaller\Console\NewCommand;
 
-$app = new Application('Craftable Installer', '2.0.0');
+$app = new Application('Craftable Installer', '1.2.0');
 $app->add(new NewCommand());
 
 $app->run();

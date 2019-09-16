@@ -24,9 +24,7 @@ class NewCommand extends Command
             ->addArgument('name', InputArgument::OPTIONAL)
             ->addOption('dev', null, InputOption::VALUE_NONE,
                 'Installs the latest DEV release ready for Craftable development')
-            //Disabled for this version, we will need this later when first non LTS version of Laravel will be released
-//            ->addOption('lts', null, InputOption::VALUE_NONE, 'Installs Craftable using LTS release of Laravel (currently 5.5)')
-            ->addOption('v4', null, InputOption::VALUE_NONE, 'Installs Craftable using latest 5.8 release of Laravel')
+            ->addOption('lts', null, InputOption::VALUE_NONE, 'Installs Craftable using LTS release of Laravel (currently 5.5)')
             ->addOption('no-install', null, InputOption::VALUE_NONE, 'Do not run craftable:install');
     }
 
@@ -45,7 +43,7 @@ class NewCommand extends Command
 
         $directory = '"' . $input->getArgument('name') . '"';
 
-        $commands[] = $composer . ' create-project --prefer-dist laravel/laravel ' . $directory . ($input->getOption('v4') ? ' "5.8" ' : ' "6.*" ');
+        $commands[] = $composer . ' create-project --prefer-dist laravel/laravel ' . $directory . ' "6.*" ';
 
         $commands[] = 'cd ' . $directory;
 
