@@ -11,6 +11,9 @@ use Symfony\Component\Process\Process;
 
 class NewCommand extends Command
 {
+    const LARAVEL_CURRENT_LTS_VERSION = '6.*';
+    const LARAVEL_CURRENT_LATEST_VERSION = '6.*';
+
     /**
      * Configure the command options.
      *
@@ -24,7 +27,8 @@ class NewCommand extends Command
             ->addArgument('name', InputArgument::OPTIONAL)
             ->addOption('dev', null, InputOption::VALUE_NONE,
                 'Installs the latest DEV release ready for Craftable development')
-            ->addOption('lts', null, InputOption::VALUE_NONE, 'Installs Craftable using LTS release of Laravel (currently 5.5)')
+            ->addOption('lts', null, InputOption::VALUE_NONE,
+                'Installs Craftable using LTS release of Laravel (currently 5.5)')
             ->addOption('no-install', null, InputOption::VALUE_NONE, 'Do not run craftable:install');
     }
 
@@ -43,7 +47,7 @@ class NewCommand extends Command
 
         $directory = '"' . $input->getArgument('name') . '"';
 
-        $commands[] = $composer . ' create-project --prefer-dist laravel/laravel ' . $directory . ' "6.*" ';
+        $commands[] = $composer . ' create-project --prefer-dist laravel/laravel ' . $directory . ($input->getOption('lts') ? ' "' . self::LARAVEL_CURRENT_LTS_VERSION . '" ' : ' "' . self::LARAVEL_CURRENT_LATEST_VERSION . '" ');
 
         $commands[] = 'cd ' . $directory;
 
