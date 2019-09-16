@@ -23,12 +23,12 @@ class NewCommand extends Command
     {
         $this
             ->setName('new')
-            ->setDescription('Create a new Craftable application using latest Laravel (currently 6).')
+            ->setDescription('Create a new Craftable application using latest Laravel (currently ' . self::LARAVEL_CURRENT_LATEST_VERSION . ').')
             ->addArgument('name', InputArgument::OPTIONAL)
             ->addOption('dev', null, InputOption::VALUE_NONE,
                 'Installs the latest DEV release ready for Craftable development')
             ->addOption('lts', null, InputOption::VALUE_NONE,
-                'Installs Craftable using LTS release of Laravel (currently 5.5)')
+                'Installs Craftable using LTS release of Laravel (currently ' . self::LARAVEL_CURRENT_LTS_VERSION . ')')
             ->addOption('no-install', null, InputOption::VALUE_NONE, 'Do not run craftable:install');
     }
 
