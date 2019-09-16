@@ -7,6 +7,10 @@
         {
             "name": "Pavol Perdík",
             "email": "pavol.perdik@brackets.sk"
+        },
+        {
+            "name": "David Běhal",
+            "email": "david.behal@brackets.sk"
         }
     ],
     "autoload": {
