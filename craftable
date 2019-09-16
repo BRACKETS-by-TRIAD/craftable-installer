@@ -7,7 +7,10 @@ if (file_exists(__DIR__.'/../../autoload.php')) {
     require __DIR__.'/vendor/autoload.php';
 }
 
-$app = new Symfony\Component\Console\Application('Craftable Installer', '1.1.0');
-$app->add(new Brackets\CraftableInstaller\Console\NewCommand);
+use Symfony\Component\Console\Application;
+use Brackets\CraftableInstaller\Console\NewCommand;
+
+$app = new Application('Craftable Installer', '2.0.0');
+$app->add(new NewCommand());
 
 $app->run();
