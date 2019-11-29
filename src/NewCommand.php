@@ -37,7 +37,7 @@ class NewCommand extends Command
      *
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -98,6 +98,8 @@ class NewCommand extends Command
         });
 
         $output->writeln('<comment>Craftable crafted! Craft something crafty ;)</comment>');
+
+        return 0;
     }
 
     /**
