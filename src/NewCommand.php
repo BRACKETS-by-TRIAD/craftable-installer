@@ -12,7 +12,7 @@ use Symfony\Component\Process\Process;
 class NewCommand extends Command
 {
     const LARAVEL_CURRENT_LTS_VERSION = '6.*';
-    const LARAVEL_CURRENT_LATEST_VERSION = '6.*';
+    const LARAVEL_CURRENT_LATEST_VERSION = '7.*';
 
     /**
      * Configure the command options.
