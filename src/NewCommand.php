@@ -12,7 +12,8 @@ use Symfony\Component\Process\Process;
 class NewCommand extends Command
 {
     const LARAVEL_CURRENT_LTS_VERSION = '6.*';
-    const LARAVEL_CURRENT_LATEST_VERSION = '7.*';
+    const LARAVEL_CURRENT_LATEST_VERSION = '6.*';
+    const LARAVEL_CURRENT_LATEST_VERSION_DEV = '7.*';
 
     /**
      * Configure the command options.
@@ -47,7 +48,12 @@ class NewCommand extends Command
 
         $directory = '"' . $input->getArgument('name') . '"';
 
-        $commands[] = $composer . ' create-project --prefer-dist laravel/laravel ' . $directory . ($input->getOption('lts') ? ' "' . self::LARAVEL_CURRENT_LTS_VERSION . '" ' : ' "' . self::LARAVEL_CURRENT_LATEST_VERSION . '" ');
+        if($input->getOption('dev')){
+            $commands[] = $composer . ' create-project --prefer-dist laravel/laravel ' . $directory . ( ' "' . self::LARAVEL_CURRENT_LATEST_VERSION_DEV . '" ');
+        }
+        else {
+            $commands[] = $composer . ' create-project --prefer-dist laravel/laravel ' . $directory . ($input->getOption('lts') ? ' "' . self::LARAVEL_CURRENT_LTS_VERSION . '" ' : ' "' . self::LARAVEL_CURRENT_LATEST_VERSION . '" ');
+        }
 
         $commands[] = 'cd ' . $directory;
 
