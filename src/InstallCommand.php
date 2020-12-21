@@ -49,6 +49,8 @@ class InstallCommand extends Command
                 return 1;
             }
 
+            // FIXME make sure ports are not already binded maybe?
+
             // then if it is running, then nevermind, but if not, then start it
             $this->checkIfSailIsUp();
         }
@@ -75,12 +77,10 @@ class InstallCommand extends Command
             $commands[] = $this->findComposer() . ' require --prefer-source ' . implode(' ', $packages);
             $commands[] = $this->findComposer() . ' require --prefer-source --dev "brackets/admin-generator:dev-master"';
         } else {
-            // FIXME remove --ignore-platform-reqs
-
             // FIXME allow switch to PostgreSQL when using Sail
 
-            $commands[] = $this->findComposer() . ' require "brackets/craftable" --ignore-platform-reqs';
-            $commands[] = $this->findComposer() . ' require --dev "brackets/admin-generator" --ignore-platform-reqs';
+            $commands[] = $this->findComposer() . ' require "brackets/craftable"';
+            $commands[] = $this->findComposer() . ' require --dev "brackets/admin-generator"';
         }
 
         $this->runCommand(implode(' && ', $commands));
