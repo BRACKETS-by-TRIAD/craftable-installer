@@ -56,8 +56,6 @@ class InstallCommand extends Command
         }
         $output->writeln('...database connection OK');
 
-        return 0;
-
         $packages = [
             'brackets/admin-ui',
             'brackets/admin-listing',
