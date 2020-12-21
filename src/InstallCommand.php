@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class InstallCommand extends Command
 {
-    private $sailAvailable = true;
+    private $useSail = true;
 
     private $sailIsUp = false;
 
@@ -38,23 +38,22 @@ class InstallCommand extends Command
     {
         $this->output = $output;
 
-        $this->sailAvailable = !boolval($input->getOption('no-sail'));
+        $this->useSail = !boolval($input->getOption('no-sail'));
 
-        if ($this->sailAvailable) {
+        if ($this->useSail) {
+
+            // if we use sail, then we try to install, never-mind we are doing it every time
+            $response = $this->runCommand($this->findArtisan() . ' sail:install');
+            if (intval($response) > 0) {
+                $output->writeln('<error>Aborted.</error>');
+                return 1;
+            }
+
+            // then if it is running, then nevermind, but if not, then start it
             $this->checkIfSailIsUp();
         }
 
         $output->writeln('<info>Crafting Craftable :) ...</info>');
-
-        // FIXME test DB connection, maybe just try to run "artisan migrate"
-        $output->writeln('First testing database connection...');
-        $status = $this->runCommand($this->findArtisan() . ' migrate:status');
-
-        if (intval($status) > 0) {
-            $output->writeln('<error>...cannot connect to database. Check your .env settings. Aborting.</error>');
-            return 1;
-        }
-        $output->writeln('...database connection OK');
 
         $packages = [
             'brackets/admin-ui',
@@ -80,19 +79,35 @@ class InstallCommand extends Command
 
             // FIXME allow switch to PostgreSQL when using Sail
 
-            // FIXME problem with default .env DB_HOST, it differs when installing Laravel using the primary way
-
             $commands[] = $this->findComposer() . ' require "brackets/craftable" --ignore-platform-reqs';
             $commands[] = $this->findComposer() . ' require --dev "brackets/admin-generator" --ignore-platform-reqs';
         }
 
         $this->runCommand(implode(' && ', $commands));
 
-        $this->runCommand($this->findArtisan() . ' craftable:install');
+        $response = $this->runCommand($this->findArtisan() . ' craftable:test-db-connection');
+        if (intval($response) > 0) {
+            $output->writeln('<error>Aborted.</error>');
+            return 1;
+        }
 
-        $this->runCommand($this->findNpm() . ' install');
+        $response = $this->runCommand($this->findArtisan() . ' craftable:install');
+        if (intval($response) > 0) {
+            $output->writeln('<error>Aborted.</error>');
+            return 1;
+        }
 
-        $this->runCommand($this->findNpm() . ' run dev');
+        $response = $this->runCommand($this->findNpm() . ' install');
+        if (intval($response) > 0) {
+            $output->writeln('<error>Aborted.</error>');
+            return 1;
+        }
+
+        $response = $this->runCommand($this->findNpm() . ' run dev');
+        if (intval($response) > 0) {
+            $output->writeln('<error>Aborted.</error>');
+            return 1;
+        }
 
         $output->writeln('<comment>Craftable crafted! Craft something crafty ;)</comment>');
 
@@ -106,7 +121,7 @@ class InstallCommand extends Command
      */
     protected function findComposer()
     {
-        if ($this->sailAvailable && file_exists($this->findSail())) {
+        if ($this->useSail && file_exists($this->findSail())) {
             $this->checkIfSailIsUp();
             return $this->findSail() . ' composer';
         } else {
@@ -121,7 +136,7 @@ class InstallCommand extends Command
      */
     protected function findArtisan()
     {
-        if ($this->sailAvailable) {
+        if ($this->useSail) {
             $this->checkIfSailIsUp();
             return $this->findSail() . ' artisan';
         }
@@ -136,7 +151,7 @@ class InstallCommand extends Command
      */
     protected function findNpm()
     {
-        if ($this->sailAvailable) {
+        if ($this->useSail) {
             $this->checkIfSailIsUp();
             return $this->findSail() .' npm';
         }
@@ -154,6 +169,6 @@ class InstallCommand extends Command
 
     private function findSail()
     {
-        return '.' . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'sail';
+        return '.' . DIRECTORY_SEPARATOR. 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'sail';
     }
 }
