@@ -43,7 +43,7 @@ class InstallCommand extends Command
         if ($this->useSail) {
 
             // if we use sail, then we try to install, never-mind we are doing it every time
-            $response = $this->runCommand($this->findArtisan() . ' sail:install');
+            $response = $this->runCommand(PHP_BINARY . ' artisan sail:install');
             if (intval($response) > 0) {
                 $output->writeln('<error>Aborted.</error>');
                 return 1;
