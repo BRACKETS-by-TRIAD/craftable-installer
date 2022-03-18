@@ -10,8 +10,8 @@ use Symfony\Component\Process\Process;
 
 abstract class Command extends ParentCommand
 {
-    const LARAVEL_CURRENT_LATEST_VERSION = '8.*';
-    const LARAVEL_CURRENT_LATEST_VERSION_DEV = '8.*';
+    const LARAVEL_CURRENT_LATEST_VERSION = '9.*';
+    const LARAVEL_CURRENT_LATEST_VERSION_DEV = '9.*';
 
     protected $output;
 
