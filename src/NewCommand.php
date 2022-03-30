@@ -55,6 +55,8 @@ class NewCommand extends Command
             $this->runCommand($this->findComposer() . ' create-project --prefer-dist laravel/laravel "' . $this->directory . ( '" "' . self::LARAVEL_CURRENT_LATEST_VERSION . '"'));
         }
 
+        $this->runCommand('cd ' . $this->directory . ' && ' . $this->findComposer() . ' require psr/simple-cache:^1.0');
+
         return 0;
     }
 
