@@ -20,8 +20,8 @@
     },
     "require": {
         "ext-zip": "*",
-        "symfony/console": "~3.0|~4.0|~5.0",
-        "symfony/process": "~3.0|~4.0|~5.0"
+        "symfony/console": "~3.0|~4.0|~5.0|~6.0",
+        "symfony/process": "~3.0|~4.0|~5.0|~6.0"
     },
     "bin": [
         "craftable"

@@ -83,27 +83,27 @@ class InstallCommand extends Command
             $commands[] = $this->findComposer() . ' require --dev "brackets/admin-generator"';
         }
 
-        $this->runCommand(implode(' && ', $commands));
+        shell_exec(implode(' && ', $commands));
 
-        $response = $this->runCommand($this->findArtisan() . ' craftable:test-db-connection');
+        $response = shell_exec($this->findArtisan() . ' craftable:test-db-connection');
         if (intval($response) > 0) {
             $output->writeln('<error>Aborted.</error>');
             return 1;
         }
 
-        $response = $this->runCommand($this->findArtisan() . ' craftable:install');
+        $response = shell_exec($this->findArtisan() . ' craftable:install');
         if (intval($response) > 0) {
             $output->writeln('<error>Aborted.</error>');
             return 1;
         }
 
-        $response = $this->runCommand($this->findNpm() . ' install');
+        $response = shell_exec($this->findNpm() . ' install');
         if (intval($response) > 0) {
             $output->writeln('<error>Aborted.</error>');
             return 1;
         }
 
-        $response = $this->runCommand($this->findNpm() . ' run dev');
+        $response = shell_exec($this->findNpm() . ' run dev');
         if (intval($response) > 0) {
             $output->writeln('<error>Aborted.</error>');
             return 1;
