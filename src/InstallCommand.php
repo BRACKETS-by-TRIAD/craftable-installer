@@ -103,7 +103,7 @@ class InstallCommand extends Command
             return 1;
         }
 
-        $response = $this->runCommand($this->findNpm() . ' run dev');
+        $response = $this->runCommand($this->findNpm() . ' run craftable-dev');
         if (intval($response) > 0) {
             $output->writeln('<error>Aborted.</error>');
             return 1;
