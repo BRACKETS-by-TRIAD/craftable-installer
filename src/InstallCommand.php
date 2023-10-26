@@ -43,7 +43,7 @@ class InstallCommand extends Command
         if ($this->useSail) {
 
             // if we use sail, then we try to install, never-mind we are doing it every time
-            $response = $this->runCommand(PHP_BINARY . ' artisan sail:install');
+            $response = $this->runCommand($this->findPHPBinary() . ' artisan sail:install');
             if (intval($response) > 0) {
                 $output->writeln('<error>Aborted.</error>');
                 return 1;
@@ -86,6 +86,7 @@ class InstallCommand extends Command
         $this->runCommand(implode(' && ', $commands));
 
         $response = $this->runCommand($this->findArtisan() . ' craftable:test-db-connection');
+
         if (intval($response) > 0) {
             $output->writeln('<error>Aborted.</error>');
             return 1;
@@ -141,7 +142,16 @@ class InstallCommand extends Command
             return $this->findSail() . ' artisan';
         }
 
-        return PHP_BINARY . ' artisan';
+        return $this->findPHPBinary() . ' artisan';
+    }
+
+    /**
+     * Get enquoted PHP binary to prevent problems when
+     * path contains whitespaces.
+     */
+    protected function findPHPBinary()
+    {
+        return '"' . PHP_BINARY . '"';
     }
 
     /**
