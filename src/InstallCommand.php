@@ -103,7 +103,7 @@ class InstallCommand extends Command
             return 1;
         }
 
-        $response = $this->runCommand($this->findNpm() . ' run craftable-dev');
+        $response = $this->runCommand($this->findNpm() . ' run ' . $this->resolveAssetsBuildCommand());
         if (intval($response) > 0) {
             $output->writeln('<error>Aborted.</error>');
             return 1;
@@ -170,5 +170,19 @@ class InstallCommand extends Command
     private function findSail()
     {
         return '.' . DIRECTORY_SEPARATOR. 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'sail';
+    }
+
+    /**
+     * Decide which command should be used to compile assets.
+     */
+    private function resolveAssetsBuildCommand(): string
+    {
+        $packageJsonContent = json_decode(file_get_contents('package.json'), JSON_OBJECT_AS_ARRAY);
+
+        if (isset($packageJsonContent['scripts']) && isset($packageJsonContent['scripts']['craftable-dev'])) {
+            return 'craftable-dev';
+        }
+
+        return 'dev';
     }
 }
